@@ -3,6 +3,8 @@
     [day8.re-frame.http-fx]
     [reagent.core :as r]
     [re-frame.core :as rf]
+    [cljss.core]
+    [cljss.reagent :refer-macros [defstyled]]
     [goog.events :as events]
     [goog.history.EventType :as HistoryEventType]
     [markdown.core :refer [md->html]]
@@ -42,7 +44,7 @@
 
 (defn create-squad [e]
     (.preventDefault e)
-    (js/console.log "Hello"))
+    (reset! squad-name ""))
 
 (defn create-squad-form [{:keys [value on-save]}]
   [:form
@@ -53,10 +55,6 @@
 (defn home-page []
   [:div "Ocean's eleven"
    [create-squad-form {:value squad-name :on-save create-squad}]])
-;; (defn home-page []
-;;   [:section.section>div.container>div.content
-;;    (when-let [docs @(rf/subscribe [:docs])]
-;;      [:div {:dangerouslySetInnerHTML {:__html (md->html docs)}}])])
 
 (def pages
   {:home #'home-page
@@ -96,7 +94,6 @@
 
 (defn init! []
   (rf/dispatch-sync [:navigate (reitit/match-by-name router :home)])
-  
   (ajax/load-interceptors!)
   (rf/dispatch [:fetch-docs])
   (hook-browser-navigation!)
