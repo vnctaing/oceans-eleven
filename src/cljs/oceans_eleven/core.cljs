@@ -38,14 +38,21 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]])
 
-(defn create-squad-form []
+(defonce squad-name (r/atom ""))
+
+(defn create-squad [e]
+    (.preventDefault e)
+    (js/console.log "Hello"))
+
+(defn create-squad-form [{:keys [value on-save]}]
   [:form
-   [:input {:type "text" :placeholder "Squad"}]
-   [:button "Create"]])
+   [:input {:type "text" :placeholder "Squad" :value @value :on-change #(reset! value (-> % .-target .-value))}]
+   [:span (str @value)]
+   [:button {:on-click on-save} "Create"]])
 
 (defn home-page []
   [:div "Ocean's eleven"
-   [create-squad-form]])
+   [create-squad-form {:value squad-name :on-save create-squad}]])
 ;; (defn home-page []
 ;;   [:section.section>div.container>div.content
 ;;    (when-let [docs @(rf/subscribe [:docs])]
