@@ -38,10 +38,18 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]])
 
+(defn create-squad-form []
+  [:form
+   [:input {:type "text" :placeholder "Squad"}]
+   [:button "Create"]])
+
 (defn home-page []
-  [:section.section>div.container>div.content
-   (when-let [docs @(rf/subscribe [:docs])]
-     [:div {:dangerouslySetInnerHTML {:__html (md->html docs)}}])])
+  [:div "Ocean's eleven"
+   [create-squad-form]])
+;; (defn home-page []
+;;   [:section.section>div.container>div.content
+;;    (when-let [docs @(rf/subscribe [:docs])]
+;;      [:div {:dangerouslySetInnerHTML {:__html (md->html docs)}}])])
 
 (def pages
   {:home #'home-page
