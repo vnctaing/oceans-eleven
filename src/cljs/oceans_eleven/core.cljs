@@ -1,17 +1,19 @@
 (ns oceans-eleven.core
   (:require
-    [day8.re-frame.http-fx]
-    [reagent.core :as r]
-    [re-frame.core :as rf]
-    [cljss.core]
-    [cljss.reagent :refer-macros [defstyled]]
-    [goog.events :as events]
-    [goog.history.EventType :as HistoryEventType]
-    [markdown.core :refer [md->html]]
-    [oceans-eleven.ajax :as ajax]
-    [oceans-eleven.events]
-    [reitit.core :as reitit]
-    [clojure.string :as string])
+   [day8.re-frame.http-fx]
+   [reagent.core :as r]
+   [re-frame.core :as rf]
+   [baking-soda.core :as b]
+   [cljss.core]
+   [cljss.reagent :refer-macros [defstyled]]
+   [goog.events :as events]
+   [goog.history.EventType :as HistoryEventType]
+   [markdown.core :refer [md->html]]
+   [oceans-eleven.ajax :as ajax]
+   [oceans-eleven.events]
+   [reitit.core :as reitit]
+   [home.core :as home]
+   [clojure.string :as string])
   (:import goog.History))
 
 (defn nav-link [uri title page]
@@ -29,7 +31,7 @@
        {:data-target :nav-menu
         :on-click #(swap! expanded? not)
         :class (when @expanded? :is-active)}
-       [:span][:span][:span]]]
+       [:span] [:span] [:span]]]
      [:div#nav-menu.navbar-menu
       {:class (when @expanded? :is-active)}
       [:div.navbar-start
@@ -40,25 +42,8 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]])
 
-(defonce squad-name (r/atom ""))
-
-(defn create-squad [e]
-    (.preventDefault e)
-    (reset! squad-name ""))
-
-(defn create-squad-form [{:keys [value on-save]}]
-  [:form
-   [:input {:type "text" :placeholder "Squad" :value @value :on-change #(reset! value (-> % .-target .-value))}]
-   [:span (str @value)]
-   [:button {:on-click on-save} "Create"]])
-
-(defn home-page []
-  [:div "Ocean's eleven"
-   [create-squad-form {:value squad-name :on-save create-squad}]])
-
 (def pages
-  {:home #'home-page
-   :about #'about-page})
+  {:home #'home/page})
 
 (defn page []
   [:div
@@ -70,8 +55,8 @@
 
 (def router
   (reitit/router
-    [["/" :home]
-     ["/about" :about]]))
+   [["/" :home]
+    ["/about" :about]]))
 
 ;; -------------------------
 ;; History
@@ -79,11 +64,11 @@
 (defn hook-browser-navigation! []
   (doto (History.)
     (events/listen
-      HistoryEventType/NAVIGATE
-      (fn [event]
-        (let [uri (or (not-empty (string/replace (.-token event) #"^.*#" "")) "/")]
-          (rf/dispatch
-            [:navigate (reitit/match-by-path router uri)]))))
+     HistoryEventType/NAVIGATE
+     (fn [event]
+       (let [uri (or (not-empty (string/replace (.-token event) #"^.*#" "")) "/")]
+         (rf/dispatch
+          [:navigate (reitit/match-by-path router uri)]))))
     (.setEnabled true)))
 
 ;; -------------------------
