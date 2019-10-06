@@ -18,7 +18,7 @@
 (rf/reg-event-fx
   :fetch-docs
   (fn [_ _]
-    {:http-xhrio {:method          :get
+    {:http/req {:method          :get
                   :uri             "/docs"
                   :response-format (ajax/raw-response-format)
                   :on-success       [:set-docs]}}))

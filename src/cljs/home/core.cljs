@@ -1,7 +1,10 @@
 (ns home.core
   (:require
    [reagent.core :as r]
-   [baking-soda.core :as b]))
+   [baking-soda.core :as b]
+   [home.events]
+   [re-frame.core :as rf]
+   [clojure.string :as str]))
 
 (defonce squad-name (r/atom ""))
 
@@ -14,9 +17,9 @@
     [b/Label "Where are you going ?"]
     [b/InputGroup
      [b/Input {:placeholder "Squad" :value @value :on-change #(reset! value (-> % .-target .-value))}]
-     [b/InputGroupAddon {:addon-type "append"} [b/Button {:type "button" :color "success"} "Create trip"]]]]])
+     [b/InputGroupAddon {:addon-type "append"} [b/Button {:type "button" :color "success" :on-click #(rf/dispatch [:create-trip])} "Create trip"]]]]])
 
 (defn page []
-  [:div "Ocean's eleven"
+  [:div "Consensus"
    [create-squad-form {:value squad-name :on-save create-squad}]])
 

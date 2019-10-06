@@ -14,6 +14,7 @@
                  middleware/wrap-formats]}
    ["/" {:get home-page}]
    ["/graphiql" {:get (fn [request] (layout/render request "graphiql.html"))}]
+   ["/trip/create" {:post (fn [request] (response/ok))}]
    ["/docs" {:get (fn [_]
                     (-> (response/ok (-> "docs/docs.md" io/resource slurp))
                         (response/header "Content-Type" "text/plain; charset=utf-8")))}]])

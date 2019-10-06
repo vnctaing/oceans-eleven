@@ -1,9 +1,9 @@
 (ns oceans-eleven.ajax
   (:require
-    [ajax.core :as ajax]
-    [luminus-transit.time :as time]
-    [cognitect.transit :as transit]
-    [re-frame.core :as rf]))
+   [ajax.core :as ajax]
+   [luminus-transit.time :as time]
+   [cognitect.transit :as transit]
+   [re-frame.core :as rf]))
 
 (defn local-uri? [{:keys [uri]}]
   (not (re-find #"^\w+?://" uri)))
@@ -24,7 +24,7 @@
          opts))
 
 (defn load-interceptors! []
-  (swap! ajax/default-interceptors
-         conj
-         (ajax/to-interceptor {:name "default headers"
-                               :request default-headers})))
+   (swap! ajax/default-interceptors
+          conj
+          (ajax/to-interceptor {:name "default headers"
+                                :request default-headers})))
