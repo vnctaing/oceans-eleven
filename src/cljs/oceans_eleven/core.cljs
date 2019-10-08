@@ -45,9 +45,15 @@
 (def pages
   {:home #'home/page})
 
+(defn global-error []
+  [b/Alert {:color "danger" :is-open (string? @(rf/subscribe [:common/error]))
+            :toggle #(rf/dispatch [:common/reset-error])} @(rf/subscribe [:common/error])])
+
+
 (defn page []
   [:div
    [navbar]
+   [global-error]
    [(pages @(rf/subscribe [:page]))]])
 
 ;; -------------------------

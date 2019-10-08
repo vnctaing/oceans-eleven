@@ -14,6 +14,8 @@
         (update :headers #(merge {"x-csrf-token" js/csrfToken} %)))
     request))
 
+(default-headers {:uri "localhost:3000"} )
+
 ;; injects transit serialization config into request options
 (defn as-transit [opts]
   (merge {:raw             false

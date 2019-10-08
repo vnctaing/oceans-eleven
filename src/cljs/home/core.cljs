@@ -3,8 +3,7 @@
    [reagent.core :as r]
    [baking-soda.core :as b]
    [home.events]
-   [re-frame.core :as rf]
-   [clojure.string :as str]))
+   [re-frame.core :as rf]))
 
 (defonce squad-name (r/atom ""))
 
