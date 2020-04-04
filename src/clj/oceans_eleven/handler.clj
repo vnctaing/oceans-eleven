@@ -1,16 +1,15 @@
 (ns oceans-eleven.handler
   (:require
-    [oceans-eleven.middleware :as middleware]
-    [oceans-eleven.layout :refer [error-page]]
-    [oceans-eleven.routes.home :refer [home-routes]]
-    [oceans-eleven.routes.services :refer [service-routes]]
-    [oceans-eleven.routes.oauth :refer [oauth-routes]]
-    [reitit.swagger-ui :as swagger-ui]
-    [reitit.ring :as ring]
-    [ring.middleware.content-type :refer [wrap-content-type]]
-    [ring.middleware.webjars :refer [wrap-webjars]]
-    [oceans-eleven.env :refer [defaults]]
-    [mount.core :as mount]))
+   [oceans-eleven.middleware :as middleware]
+   [oceans-eleven.layout :refer [error-page]]
+   [oceans-eleven.routes.home :refer [home-routes]]
+   [oceans-eleven.routes.services :refer [service-routes]]
+   [oceans-eleven.routes.oauth :refer [oauth-routes]]
+   [reitit.ring :as ring]
+   [ring.middleware.content-type :refer [wrap-content-type]]
+   [ring.middleware.webjars :refer [wrap-webjars]]
+   [oceans-eleven.env :refer [defaults]]
+   [mount.core :as mount]))
 
 (mount/defstate init-app
   :start ((or (:init defaults) (fn [])))
@@ -24,10 +23,6 @@
        (service-routes)
        (oauth-routes)])
     (ring/routes
-      (swagger-ui/create-swagger-ui-handler
-        {:path   "/swagger-ui"
-         :url    "/api/swagger.json"
-         :config {:validator-url nil}})
       (ring/create-resource-handler
         {:path "/"})
       (wrap-content-type
