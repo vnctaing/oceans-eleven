@@ -18,7 +18,7 @@
 
 (defn nav-link [uri title page]
   [:a.navbar-item
-   {:href   uri
+   {:href  uri
     :class (when (= page @(rf/subscribe [:page])) :is-active)}
    title])
 
@@ -29,8 +29,8 @@
       [:a.navbar-item {:href "/" :style {:font-weight :bold}} "oceans-eleven"]
       [:span.navbar-burger.burger
        {:data-target :nav-menu
-        :on-click #(swap! expanded? not)
-        :class (when @expanded? :is-active)}
+        :on-click    #(swap! expanded? not)
+        :class       (when @expanded? :is-active)}
        [:span] [:span] [:span]]]
      [:div#nav-menu.navbar-menu
       {:class (when @expanded? :is-active)}
@@ -46,9 +46,8 @@
   {:home #'home/page})
 
 (defn global-error []
-  [b/Alert {:color "danger" :is-open (string? @(rf/subscribe [:common/error]))
-            :toggle #(rf/dispatch [:common/reset-error])} @(rf/subscribe [:common/error])])
-
+  (if @(rf/subscribe [:common/error]) [b/Alert {:color  "danger" :is-open true
+                                                :toggle #(rf/dispatch [:common/reset-error])}  @(rf/subscribe [:common/error])]))
 
 (defn page []
   [:div
@@ -61,20 +60,21 @@
 
 (def router
   (reitit/router
-   [["/" :home]
-    ["/about" :about]]))
+    [["/" :home]]))
 
 ;; -------------------------
 ;; History
 ;; must be called after routes have been defined
+
+
 (defn hook-browser-navigation! []
   (doto (History.)
     (events/listen
-     HistoryEventType/NAVIGATE
-     (fn [event]
-       (let [uri (or (not-empty (string/replace (.-token event) #"^.*#" "")) "/")]
-         (rf/dispatch
-          [:navigate (reitit/match-by-path router uri)]))))
+      HistoryEventType/NAVIGATE
+      (fn [event]
+        (let [uri (or (not-empty (string/replace (.-token event) #"^.*#" "")) "/")]
+          (rf/dispatch
+            [:navigate (reitit/match-by-path router uri)]))))
     (.setEnabled true)))
 
 ;; -------------------------
