@@ -1,8 +1,8 @@
 (defproject oceans-eleven "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
-  :repositories [["my.datomic.com" {:url "https://my.datomic.com/repo"
-                :creds :gpg}]]
+  :repositories [["my.datomic.com" {:url   "https://my.datomic.com/repo"
+                                    :creds :gpg}]]
   :dependencies [[ch.qos.logback/logback-classic "1.2.3"]
                  [cheshire "5.8.1"]
                  [clj-oauth "1.5.5"]
@@ -10,6 +10,8 @@
                  [baking-soda "0.2.0"]
                  [reagent "0.8.1" :exclusions [cljsjs/react
                                                cljsjs/react-dom]]
+                 [denistakeda/posh "0.5.8"]
+                 [datascript "0.18.12"]
                  [cljsjs/react "16.3.2-0"]
                  [cljsjs/react-dom "16.3.2-0"]
                  [cljsjs/react-transition-group "2.3.1-0"]
@@ -62,80 +64,80 @@
   [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
   :figwheel
   {:http-server-root "public"
-   :server-logfile "log/figwheel-logfile.log"
-   :nrepl-port 7002
-   :css-dirs ["resources/public/css"]
+   :server-logfile   "log/figwheel-logfile.log"
+   :nrepl-port       7002
+   :css-dirs         ["resources/public/css"]
    :nrepl-middleware [cider.piggieback/wrap-cljs-repl]}
 
   :profiles
-  {:uberjar {:omit-source true
-             :prep-tasks ["compile" ["cljsbuild" "once" "min"]]
-             :cljsbuild {:builds
-                         {:min
-                          {:source-paths ["src/cljc" "src/cljs" "env/prod/cljs"]
-                           :compiler
-                           {:output-dir "target/cljsbuild/public/js"
-                            :output-to "target/cljsbuild/public/js/app.js"
-                            :source-map "target/cljsbuild/public/js/app.js.map"
-                            :optimizations :advanced
-                            :pretty-print false
-                            :infer-externs true
-                            :closure-warnings
-                            {:externs-validation :off :non-standard-jsdoc :off}
-                            :externs ["react/externs/react.js"]}}}}
-             :aot :all
-             :uberjar-name "oceans-eleven.jar"
-             :source-paths ["env/prod/clj"]
+  {:uberjar {:omit-source    true
+             :prep-tasks     ["compile" ["cljsbuild" "once" "min"]]
+             :cljsbuild      {:builds
+                              {:min
+                               {:source-paths ["src/cljc" "src/cljs" "env/prod/cljs"]
+                                :compiler
+                                {:output-dir    "target/cljsbuild/public/js"
+                                 :output-to     "target/cljsbuild/public/js/app.js"
+                                 :source-map    "target/cljsbuild/public/js/app.js.map"
+                                 :optimizations :advanced
+                                 :pretty-print  false
+                                 :infer-externs true
+                                 :closure-warnings
+                                 {:externs-validation :off :non-standard-jsdoc :off}
+                                 :externs       ["react/externs/react.js"]}}}}
+             :aot            :all
+             :uberjar-name   "oceans-eleven.jar"
+             :source-paths   ["env/prod/clj"]
              :resource-paths ["env/prod/resources"]}
 
-   :dev           [:project/dev :profiles/dev]
-   :test          [:project/dev :project/test :profiles/test]
+   :dev  [:project/dev :profiles/dev]
+   :test [:project/dev :project/test :profiles/test]
 
-   :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"]
-                  :dependencies [[binaryage/devtools "0.9.10"]
-                                 [cider/piggieback "0.4.1"]
-                                 [doo "0.1.11"]
-                                 [figwheel-sidecar "0.5.19"]
-                                 [pjstadig/humane-test-output "0.9.0"]
-                                 [prone "2019-07-08"]
-                                 [re-frisk "0.5.4.1"]
-                                 [ring/ring-devel "1.7.1"]
-                                 [ring/ring-mock "0.4.0"]]
-                  :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
-                                 [lein-doo "0.1.11"]
-                                 [lein-figwheel "0.5.19"]]
-                  :cljsbuild {:builds
-                              {:app
-                               {:source-paths ["src/cljs" "src/cljc" "env/dev/cljs"]
-                                :figwheel {:on-jsload "oceans-eleven.core/mount-components"}
-                                :compiler
-                                {:output-dir "target/cljsbuild/public/js/out"
-                                 :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
-                                 :optimizations :none
-                                 :preloads [re-frisk.preload]
-                                 :output-to "target/cljsbuild/public/js/app.js"
-                                 :asset-path "/js/out"
-                                 :source-map true
-                                 :main "oceans-eleven.app"
-                                 :pretty-print true}}}}
+   :project/dev {:jvm-opts     ["-Dconf=dev-config.edn"]
+                 :dependencies [[binaryage/devtools "0.9.10"]
+                                [cider/piggieback "0.4.1"]
+                                [doo "0.1.11"]
+                                [figwheel-sidecar "0.5.19"]
+                                [pjstadig/humane-test-output "0.9.0"]
+                                [prone "2019-07-08"]
+                                [re-frisk "0.5.4.1"]
+                                [ring/ring-devel "1.7.1"]
+                                [ring/ring-mock "0.4.0"]]
+                 :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
+                                [lein-doo "0.1.11"]
+                                [lein-figwheel "0.5.19"]]
+                 :cljsbuild    {:builds
+                                {:app
+                                 {:source-paths ["src/cljs" "src/cljc" "env/dev/cljs"]
+                                  :figwheel     {:on-jsload "oceans-eleven.core/mount-components"}
+                                  :compiler
+                                  {:output-dir      "target/cljsbuild/public/js/out"
+                                   :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
+                                   :optimizations   :none
+                                   :preloads        [re-frisk.preload]
+                                   :output-to       "target/cljsbuild/public/js/app.js"
+                                   :asset-path      "/js/out"
+                                   :source-map      true
+                                   :main            "oceans-eleven.app"
+                                   :pretty-print    true}}}}
 
-                  :doo {:build "test"}
-                  :source-paths ["env/dev/clj"]
-                  :resource-paths ["env/dev/resources"]
-                  :repl-options {:init-ns user}
-                  :injections [(require 'pjstadig.humane-test-output)
-                               (pjstadig.humane-test-output/activate!)]}
-   :project/test {:jvm-opts ["-Dconf=test-config.edn"]
+                 :doo            {:build "test"}
+                 :source-paths   ["env/dev/clj"]
+                 :resource-paths ["env/dev/resources"]
+                 :repl-options   {:init-ns user}
+                 :injections     [(require 'pjstadig.humane-test-output)
+                                  (pjstadig.humane-test-output/activate!)]}
+   :project/test {:jvm-opts       ["-Dconf=test-config.edn"]
                   :resource-paths ["env/test/resources"]
                   :cljsbuild
                   {:builds
                    {:test
                     {:source-paths ["src/cljc" "src/cljs" "test/cljs"]
                      :compiler
-                     {:output-to "target/test.js"
-                      :main "oceans-eleven.doo-runner"
+                     {:output-to     "target/test.js"
+                      :main          "oceans-eleven.doo-runner"
                       :optimizations :whitespace
-                      :pretty-print true}}}}}
+                      :pretty-print  true}}}}}
 
-   :profiles/dev {}
+   :profiles/dev  {}
    :profiles/test {}})
